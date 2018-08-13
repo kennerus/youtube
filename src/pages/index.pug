@@ -1,0 +1,12 @@
+extends ../components/layout-default/layout-default
+include ../components/modal/modal
+
+block head
+    - var pageTitle = 'Index Page';
+
+block content
+  +b('button').button.js_openModal Добавить видео
+
+  +b#video
+
+  +modal
