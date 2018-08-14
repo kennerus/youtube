@@ -1,10 +1,17 @@
 'use strict';
 
 class AddVideo {
-  constructor(input, videoContainer) {
+  constructor(videoContainer) {
     this.videoContainer = document.getElementById(videoContainer);
+
   }
 
+  /**
+   * get video id from youtube link
+   *
+   * @param link
+   * @returns {string}
+   */
   getYoutubeId(link) {
     let videoId;
     if (link.indexOf('.be/') !== -1) {
@@ -21,6 +28,15 @@ class AddVideo {
     }
   }
 
+  /**
+   *
+   * create element and append it
+   *
+   * @param elementType
+   * @param className
+   * @param innerHtml
+   * @param appendTo
+   */
   createElement(elementType, className, innerHtml, appendTo) {
     const modal = document.querySelector(`.${appendTo}`);
     const element = document.createElement(elementType);
@@ -29,6 +45,21 @@ class AddVideo {
     modal.appendChild(element);
   }
 
+  /**
+   * remove element
+   *
+   * @param className
+   */
+  removeElement(className) {
+    const element = document.querySelector(`.${className}`);
+    element.remove();
+  }
+
+  /**
+   * adding iframe to div
+   *
+   * @param videoId
+   */
   onYouTubeIframeAPIReady(videoId) {
     const player = new YT.Player(this.videoContainer, {
       height: '360',
@@ -37,7 +68,11 @@ class AddVideo {
     });
   }
 
-
+  /**
+   * request to api. gives all info about video
+   *
+   * @param link
+   */
   httpRequest(link) {
     const videoId = this.getYoutubeId(link);
     const apiURL = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCHT9pNb7goNLOj_VHACnp4PgWtgzUpwPw';

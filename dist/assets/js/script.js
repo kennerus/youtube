@@ -5,11 +5,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AddVideo = function () {
-  function AddVideo(input, videoContainer) {
+  function AddVideo(videoContainer) {
     _classCallCheck(this, AddVideo);
 
     this.videoContainer = document.getElementById(videoContainer);
   }
+
+  /**
+   * get video id from youtube link
+   *
+   * @param link
+   * @returns {string}
+   */
+
 
   _createClass(AddVideo, [{
     key: 'getYoutubeId',
@@ -28,6 +36,17 @@ var AddVideo = function () {
         return videoId;
       }
     }
+
+    /**
+     *
+     * create element and append it
+     *
+     * @param elementType
+     * @param className
+     * @param innerHtml
+     * @param appendTo
+     */
+
   }, {
     key: 'createElement',
     value: function createElement(elementType, className, innerHtml, appendTo) {
@@ -37,6 +56,26 @@ var AddVideo = function () {
       element.innerHTML = innerHtml;
       modal.appendChild(element);
     }
+
+    /**
+     * remove element
+     *
+     * @param className
+     */
+
+  }, {
+    key: 'removeElement',
+    value: function removeElement(className) {
+      var element = document.querySelector('.' + className);
+      element.remove();
+    }
+
+    /**
+     * adding iframe to div
+     *
+     * @param videoId
+     */
+
   }, {
     key: 'onYouTubeIframeAPIReady',
     value: function onYouTubeIframeAPIReady(videoId) {
@@ -46,6 +85,13 @@ var AddVideo = function () {
         videoId: videoId
       });
     }
+
+    /**
+     * request to api. gives all info about video
+     *
+     * @param link
+     */
+
   }, {
     key: 'httpRequest',
     value: function httpRequest(link) {
