@@ -129,7 +129,7 @@ var AddVideo = function () {
   return AddVideo;
 }();
 
-var addVideo = new AddVideo('js_input', 'video');
+var addVideo = new AddVideo('video');
 var input = document.querySelector('.js_input');
 
 input.oninput = function () {

@@ -3,7 +3,6 @@
 class AddVideo {
   constructor(videoContainer) {
     this.videoContainer = document.getElementById(videoContainer);
-
   }
 
   /**
