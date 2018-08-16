@@ -3,6 +3,7 @@
 class AddVideo {
   constructor(videoContainer) {
     this.videoContainer = document.getElementById(videoContainer);
+    // this.addVideo = this.httpRequest(link);
   }
 
   /**
@@ -63,12 +64,16 @@ class AddVideo {
     const player = new YT.Player(this.videoContainer, {
       height: '360',
       width: '640',
-      videoId: videoId
+      videoId: videoId,
+      events: {
+        'onReady': this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content'),
+        'onError': this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content')
+      }
     });
   }
 
   /**
-   * request to api. gives all info about video
+   * request to google api. gives all info about video
    *
    * @param link
    */
@@ -89,19 +94,21 @@ class AddVideo {
     // 4. Если код ответа сервера не 200, то это ошибка
     if (xhr.status != 200) {
       // обработать ошибку
-      //console.log(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
-      this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content');
+      console.log(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
     } else {
       // вывести результат
       const youtubeData = JSON.parse(xhr.responseText);
       console.log(youtubeData);
-
-      this.onYouTubeIframeAPIReady(videoId);
-
-      // callYoutube('player', video_id);
-      this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content');
     }
   }
 
-
+  /**
+   * add video on the page
+   *
+   * @param link
+   */
+  addVideoOnPage(link) {
+    const videoId = this.getYoutubeId(link);
+    this.onYouTubeIframeAPIReady(videoId);
+  }
 }

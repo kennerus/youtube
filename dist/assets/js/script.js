@@ -9,6 +9,7 @@ var AddVideo = function () {
     _classCallCheck(this, AddVideo);
 
     this.videoContainer = document.getElementById(videoContainer);
+    // this.addVideo = this.httpRequest(link);
   }
 
   /**
@@ -82,12 +83,16 @@ var AddVideo = function () {
       var player = new YT.Player(this.videoContainer, {
         height: '360',
         width: '640',
-        videoId: videoId
+        videoId: videoId,
+        events: {
+          'onReady': this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content'),
+          'onError': this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content')
+        }
       });
     }
 
     /**
-     * request to api. gives all info about video
+     * request to google api. gives all info about video
      *
      * @param link
      */
@@ -111,18 +116,25 @@ var AddVideo = function () {
       // 4. Если код ответа сервера не 200, то это ошибка
       if (xhr.status != 200) {
         // обработать ошибку
-        //console.log(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
-        this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content');
+        console.log(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
       } else {
         // вывести результат
         var youtubeData = JSON.parse(xhr.responseText);
         console.log(youtubeData);
-
-        this.onYouTubeIframeAPIReady(videoId);
-
-        // callYoutube('player', video_id);
-        this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content');
       }
+    }
+
+    /**
+     * add video on the page
+     *
+     * @param link
+     */
+
+  }, {
+    key: 'addVideoOnPage',
+    value: function addVideoOnPage(link) {
+      var videoId = this.getYoutubeId(link);
+      this.onYouTubeIframeAPIReady(videoId);
     }
   }]);
 
@@ -133,7 +145,7 @@ var addVideo = new AddVideo('video');
 var input = document.querySelector('.js_input');
 
 input.oninput = function () {
-  addVideo.httpRequest(input.value);
+  addVideo.addVideoOnPage(input.value);
 };
 
 var openModalBtn = document.querySelector('.js_openModal');
