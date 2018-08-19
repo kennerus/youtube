@@ -4,12 +4,56 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AddVideo = function () {
-  function AddVideo(videoContainer) {
-    _classCallCheck(this, AddVideo);
+var Modal = function () {
+  function Modal(modalOpenSelector, modalCloseSelector, modalSelector, activeModalSelector) {
+    _classCallCheck(this, Modal);
 
-    this.videoContainer = document.getElementById(videoContainer);
-    // this.addVideo = this.httpRequest(link);
+    this.modalOpenSelector = modalOpenSelector;
+    this.modalCloseSelector = modalCloseSelector;
+    this.activeModalSelector = activeModalSelector;
+    this.modalSelector = modalSelector;
+
+    this.init();
+  }
+
+  _createClass(Modal, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      var openButton = document.querySelector(this.modalOpenSelector);
+      var closeButton = document.querySelector(this.modalCloseSelector);
+      var modal = document.querySelector(this.modalSelector);
+
+      openButton.addEventListener('click', function () {
+        modal.classList.add(_this.activeModalSelector);
+      });
+
+      closeButton.addEventListener('click', function () {
+        modal.classList.remove(_this.activeModalSelector);
+      });
+    }
+  }]);
+
+  return Modal;
+}();
+
+'use strict';
+
+var ParseYoutubeVideo = function () {
+  function ParseYoutubeVideo(initData) {
+    _classCallCheck(this, ParseYoutubeVideo);
+
+    var init = initData || {};
+    this.initData = {
+      videoContainer: init.videoContainer || 'video',
+      successElementType: init.successElementType || 'span',
+      successElementClass: init.successElementClass || 'video_done',
+      successElementHtml: init.successElementHtml || 'Видео успешно добавлено',
+      successElementAppendTo: init.successElementAppendTo || '.modal__content'
+    };
+
+    this.videoContainer = document.getElementById(this.initData.videoContainer);
   }
 
   /**
@@ -20,7 +64,7 @@ var AddVideo = function () {
    */
 
 
-  _createClass(AddVideo, [{
+  _createClass(ParseYoutubeVideo, [{
     key: 'getYoutubeId',
     value: function getYoutubeId(link) {
       var videoId = void 0;
@@ -51,7 +95,7 @@ var AddVideo = function () {
   }, {
     key: 'createElement',
     value: function createElement(elementType, className, innerHtml, appendTo) {
-      var modal = document.querySelector('.' + appendTo);
+      var modal = document.querySelector(appendTo);
       var element = document.createElement(elementType);
       element.className = className;
       element.innerHTML = innerHtml;
@@ -61,13 +105,13 @@ var AddVideo = function () {
     /**
      * remove element
      *
-     * @param className
+     * @param el
      */
 
   }, {
     key: 'removeElement',
-    value: function removeElement(className) {
-      var element = document.querySelector('.' + className);
+    value: function removeElement(el) {
+      var element = document.querySelector(el);
       element.remove();
     }
 
@@ -85,8 +129,7 @@ var AddVideo = function () {
         width: '640',
         videoId: videoId,
         events: {
-          'onReady': this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content'),
-          'onError': this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content')
+          'onReady': this.createElement(this.initData.successElementClass, this.initData.successElementClass, this.initData.successElementHtml, this.initData.successElementAppendTo)
         }
       });
     }
@@ -105,7 +148,6 @@ var AddVideo = function () {
 
       // 1. Создаём новый объект XMLHttpRequest
       var xhr = new XMLHttpRequest();
-      var postAjax = new XMLHttpRequest();
 
       // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
       xhr.open('GET', apiURL, false);
@@ -125,7 +167,7 @@ var AddVideo = function () {
     }
 
     /**
-     * add video on the page
+     * add video to the page
      *
      * @param link
      */
@@ -133,30 +175,25 @@ var AddVideo = function () {
   }, {
     key: 'addVideoOnPage',
     value: function addVideoOnPage(link) {
+      var _this2 = this;
+
       var videoId = this.getYoutubeId(link);
       this.onYouTubeIframeAPIReady(videoId);
+
+      setTimeout(function () {
+        _this2.removeElement('.video_done');
+      }, 3000);
     }
   }]);
 
-  return AddVideo;
+  return ParseYoutubeVideo;
 }();
 
-var addVideo = new AddVideo('video');
+var addVideo = new ParseYoutubeVideo();
 var input = document.querySelector('.js_input');
+var modal = new Modal('.js_openModal', '.js_closeModal', '.js_modal', 'modal_opened');
 
 input.oninput = function () {
   addVideo.addVideoOnPage(input.value);
 };
-
-var openModalBtn = document.querySelector('.js_openModal');
-var closeModal = document.querySelector('.js_closeModal');
-var modal = document.querySelector('.js_modal');
-
-openModalBtn.addEventListener('click', function () {
-  modal.classList.add('modal_opened');
-});
-
-closeModal.addEventListener('click', function () {
-  modal.classList.remove('modal_opened');
-});
 //# sourceMappingURL=script.js.map

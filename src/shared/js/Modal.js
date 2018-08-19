@@ -6,41 +6,22 @@ class Modal {
     this.modalCloseSelector = modalCloseSelector;
     this.activeModalSelector = activeModalSelector;
     this.modalSelector = modalSelector;
-    this.isModalOpened = false;
+
+    this.init();
   }
 
-  /**
-   * decide what selector using atm
-   *
-   * @param selector
-   * @returns {*}
-   */
-  whatSelectorInUse(selector) {
-    switch(selector) {
-      case document.querySelector(selector):
-        return document.querySelector(selector);
-      case document.querySelector(`.${selector}`):
-        return document.querySelector(`.${selector}`);
-      case document.querySelector(`#${selector}`):
-        return document.querySelector(`#${selector}`);
-      case document.querySelector(`[${selector}]`):
-        return document.querySelector(`[${selector}]`);
-      default:
-        console.log('Something went wrong.');
-    }
-  }
 
-  toggleModal() {
-    const openButton = this.whatSelectorInUse(this.modalOpenSelector);
-    const closeButton = this.whatSelectorInUse(this.modalCloseSelector);
-    const modal = this.whatSelectorInUse(this.modalSelector);
+  init() {
+    const openButton = document.querySelector(this.modalOpenSelector);
+    const closeButton = document.querySelector(this.modalCloseSelector);
+    const modal = document.querySelector(this.modalSelector);
 
-    openButton.addEventListener('click', function () {
+    openButton.addEventListener('click', () => {
       modal.classList.add(this.activeModalSelector);
     });
 
-    closeButton.addEventListener('click', function () {
+    closeButton.addEventListener('click', () => {
       modal.classList.remove(this.activeModalSelector);
-    })
+    });
   };
 }

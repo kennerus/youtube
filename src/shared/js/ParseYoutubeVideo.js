@@ -1,9 +1,17 @@
 'use strict';
 
-class AddVideo {
-  constructor(videoContainer) {
-    this.videoContainer = document.getElementById(videoContainer);
-    // this.addVideo = this.httpRequest(link);
+class ParseYoutubeVideo {
+  constructor(initData) {
+    const init = initData || {};
+    this.initData = {
+      videoContainer: init.videoContainer || 'video',
+      successElementType: init.successElementType || 'span',
+      successElementClass: init.successElementClass || 'video_done',
+      successElementHtml: init.successElementHtml || 'Видео успешно добавлено',
+      successElementAppendTo: init.successElementAppendTo || '.modal__content'
+    };
+
+    this.videoContainer = document.getElementById(this.initData.videoContainer);
   }
 
   /**
@@ -38,7 +46,7 @@ class AddVideo {
    * @param appendTo
    */
   createElement(elementType, className, innerHtml, appendTo) {
-    const modal = document.querySelector(`.${appendTo}`);
+    const modal = document.querySelector(appendTo);
     const element = document.createElement(elementType);
     element.className = className;
     element.innerHTML = innerHtml;
@@ -48,10 +56,10 @@ class AddVideo {
   /**
    * remove element
    *
-   * @param className
+   * @param el
    */
-  removeElement(className) {
-    const element = document.querySelector(`.${className}`);
+  removeElement(el) {
+    const element = document.querySelector(el);
     element.remove();
   }
 
@@ -66,8 +74,12 @@ class AddVideo {
       width: '640',
       videoId: videoId,
       events: {
-        'onReady': this.createElement('span', 'video_done', 'Видео успешно добавлено', 'modal__content'),
-        'onError': this.createElement('span', 'video_error', 'Произошла ошибка', 'modal__content')
+        'onReady': this.createElement(
+          this.initData.successElementClass,
+          this.initData.successElementClass,
+          this.initData.successElementHtml,
+          this.initData.successElementAppendTo
+        ),
       }
     });
   }
@@ -83,7 +95,6 @@ class AddVideo {
 
     // 1. Создаём новый объект XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    let postAjax = new XMLHttpRequest();
 
     // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
     xhr.open('GET', apiURL, false);
@@ -103,12 +114,16 @@ class AddVideo {
   }
 
   /**
-   * add video on the page
+   * add video to the page
    *
    * @param link
    */
   addVideoOnPage(link) {
     const videoId = this.getYoutubeId(link);
     this.onYouTubeIframeAPIReady(videoId);
+
+    setTimeout(() => {
+      this.removeElement('.video_done');
+    }, 3000)
   }
 }
