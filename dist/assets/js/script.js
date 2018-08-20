@@ -50,7 +50,8 @@ var ParseYoutubeVideo = function () {
       successElementType: init.successElementType || 'span',
       successElementClass: init.successElementClass || 'video_done',
       successElementHtml: init.successElementHtml || 'Видео успешно добавлено',
-      successElementAppendTo: init.successElementAppendTo || '.modal__content'
+      successElementAppendTo: init.successElementAppendTo || '',
+      customMethod: init.customMethod || function () {}
     };
 
     this.videoContainer = document.getElementById(this.initData.videoContainer);
@@ -111,7 +112,7 @@ var ParseYoutubeVideo = function () {
   }, {
     key: 'removeElement',
     value: function removeElement(el) {
-      var element = document.querySelector(el);
+      var element = document.querySelector('.' + el) || document.querySelector('#' + el);
       element.remove();
     }
 
@@ -129,7 +130,7 @@ var ParseYoutubeVideo = function () {
         width: '640',
         videoId: videoId,
         events: {
-          'onReady': this.createElement(this.initData.successElementClass, this.initData.successElementClass, this.initData.successElementHtml, this.initData.successElementAppendTo)
+          'onReady': this.createElement(this.initData.successElementType, this.initData.successElementClass, this.initData.successElementHtml, this.initData.successElementAppendTo)
         }
       });
     }
@@ -181,7 +182,7 @@ var ParseYoutubeVideo = function () {
       this.onYouTubeIframeAPIReady(videoId);
 
       setTimeout(function () {
-        _this2.removeElement('.video_done');
+        _this2.removeElement(_this2.initData.successElementClass);
       }, 3000);
     }
   }]);
@@ -189,11 +190,14 @@ var ParseYoutubeVideo = function () {
   return ParseYoutubeVideo;
 }();
 
-var addVideo = new ParseYoutubeVideo();
+var addVideo = new ParseYoutubeVideo({
+  successElementAppendTo: '#root'
+});
 var input = document.querySelector('.js_input');
-var modal = new Modal('.js_openModal', '.js_closeModal', '.js_modal', 'modal_opened');
+var addVideoBtn = document.querySelector('.js_addVideo');
 
-input.oninput = function () {
-  addVideo.addVideoOnPage(input.value);
-};
+addVideoBtn.addEventListener('click', function () {
+  var inputValue = input.value;
+  addVideo.addVideoOnPage(inputValue);
+});
 //# sourceMappingURL=script.js.map

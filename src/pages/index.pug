@@ -5,8 +5,8 @@ block head
     - var pageTitle = 'Index Page';
 
 block content
-  +b('button').button.js_openModal Добавить видео
+  +b#root
+    +b('input')(type="text").input.js_input
+    +b('button').button.js_addVideo Добавить видео
 
-  +b#video1
-
-  +modal
+    +b#video

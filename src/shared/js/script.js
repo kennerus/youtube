@@ -1,8 +1,10 @@
-let addVideo = new ParseYoutubeVideo();
+let addVideo = new ParseYoutubeVideo({
+  successElementAppendTo: '#root'
+});
 const input = document.querySelector('.js_input');
-let modal = new Modal('.js_openModal', '.js_closeModal', '.js_modal', 'modal_opened');
+const addVideoBtn = document.querySelector('.js_addVideo');
 
-input.oninput = function () {
-  addVideo.addVideoOnPage(input.value);
-};
-
+addVideoBtn.addEventListener('click', () => {
+  const inputValue = input.value;
+  addVideo.addVideoOnPage(inputValue);
+});

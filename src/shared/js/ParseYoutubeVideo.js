@@ -8,7 +8,10 @@ class ParseYoutubeVideo {
       successElementType: init.successElementType || 'span',
       successElementClass: init.successElementClass || 'video_done',
       successElementHtml: init.successElementHtml || 'Видео успешно добавлено',
-      successElementAppendTo: init.successElementAppendTo || '.modal__content'
+      successElementAppendTo: init.successElementAppendTo || '',
+      customMethod: init.customMethod || function() {
+
+      }
     };
 
     this.videoContainer = document.getElementById(this.initData.videoContainer);
@@ -59,7 +62,7 @@ class ParseYoutubeVideo {
    * @param el
    */
   removeElement(el) {
-    const element = document.querySelector(el);
+    const element = document.querySelector(`.${el}`) || document.querySelector(`#${el}`);
     element.remove();
   }
 
@@ -75,7 +78,7 @@ class ParseYoutubeVideo {
       videoId: videoId,
       events: {
         'onReady': this.createElement(
-          this.initData.successElementClass,
+          this.initData.successElementType,
           this.initData.successElementClass,
           this.initData.successElementHtml,
           this.initData.successElementAppendTo
@@ -123,7 +126,7 @@ class ParseYoutubeVideo {
     this.onYouTubeIframeAPIReady(videoId);
 
     setTimeout(() => {
-      this.removeElement('.video_done');
+      this.removeElement(this.initData.successElementClass);
     }, 3000)
   }
 }

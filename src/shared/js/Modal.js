@@ -10,7 +10,6 @@ class Modal {
     this.init();
   }
 
-
   init() {
     const openButton = document.querySelector(this.modalOpenSelector);
     const closeButton = document.querySelector(this.modalCloseSelector);
